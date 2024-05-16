@@ -1,0 +1,153 @@
+openapi: 3.0.0
+info:
+  title: Club Opportunity Microservice
+  description: API for managing opportunities within a club application
+  version: 1.0.0
+servers:
+  - url: http://localhost:8080/api
+paths:
+  /opportunities:
+    get:
+      summary: Get all opportunities
+      responses:
+        '200':
+          description: A list of opportunities
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Opportunity'
+    post:
+      summary: Create a new opportunity
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OpportunityInput'
+      responses:
+        '201':
+          description: The created opportunity
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Opportunity'
+  /opportunities/{opportunityId}:
+    get:
+      summary: Get an opportunity by ID
+      parameters:
+        - name: opportunityId
+          in: path
+          required: true
+          description: ID of the opportunity to get
+          schema:
+            type: string
+      responses:
+        '200':
+          description: The requested opportunity
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Opportunity'
+        '404':
+          description: Opportunity not found
+    put:
+      summary: Update an opportunity
+      parameters:
+        - name: opportunityId
+          in: path
+          required: true
+          description: ID of the opportunity to update
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OpportunityInput'
+      responses:
+        '200':
+          description: The updated opportunity
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Opportunity'
+        '404':
+          description: Opportunity not found
+    delete:
+      summary: Delete an opportunity
+      parameters:
+        - name: opportunityId
+          in: path
+          required: true
+          description: ID of the opportunity to delete
+          schema:
+            type: string
+      responses:
+        '204':
+          description: Opportunity deleted successfully
+        '404':
+          description: Opportunity not found
+components:
+  schemas:
+    Opportunity:
+      type: object
+      properties:
+        id:
+          type: string
+          description: The unique identifier for the opportunity
+        name:
+          type: string
+          description: The title of the opportunity
+        description:
+          type: string
+          description: The description of the opportunity
+        createdDate:
+          type: string
+          format: date
+          description: The date of the opportunity
+        createdBy:
+          type: string
+          description: user/agent who created this opportunity
+        assignedTo:
+          type: string
+          description: user/agent assigned to this opportunity
+        closedDate:
+          type: string
+          format: date
+          description: the date opportunity got closed
+        customerId:
+          type: string
+          description: opportunity is for which customer
+        status:
+          type: string
+          description: status whether opportunity is successful or new or failure in conversion to member
+      required:
+        - name
+        - description
+        - date
+    OpportunityInput:
+      type: object
+      properties:
+        name:
+          type: string
+          description: The title of the opportunity
+        description:
+          type: string
+          description: The description of the opportunity
+        date:
+          type: string
+          format: date
+          description: The date of the opportunity
+        customerId:
+          type: string
+          description: Opportunity should bemapped which customer
+        status:
+          type: string
+          description: status whether opportunity is successful or new or failure in conversion to member
+      required:
+        - name
+        - description
+        - date
